@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useRef, useState } from 'react'
-
+import toast from 'react-hot-toast'
 export default function Home() {
   //variables
   const [messages, setMessages] = useState([]);
@@ -28,6 +28,7 @@ export default function Home() {
       return;
     } catch (error) {
       console.log(error);
+      toast.error("There was an error while loading the Data");
       setTyping(false)
     }
 
@@ -37,23 +38,28 @@ export default function Home() {
     e.preventDefault();
     try {
       setTyping(true)
+      setQuery('');
       const response = await axios.post('https://getcody.ai/api/v1/messages', { 'content': query, 'conversation_id': 'WjnegEGA3bwZ' }, {
         headers: {
           'Authorization': 'Bearer 895DxNd88qTCyBAh1X65pYI2s41lZZc9ZY7JCM1L13a16323',
           'Content-Type': 'application/json'
         }
       });
-      setQuery('');
       fetchMessages();
-      setTyping(false)
+      setTyping(false);
       return;
     } catch (error) {
+      toast.error("There was an error while loading the Data");
       console.log(error);
     }
   }
 
   useEffect(() => {
     fetchMessages();
+    //scrolling to bottom after every render
+if(messageDiv.current){
+  messageDiv.current.scrollTop = messageDiv.current.scrollHeight;
+}
   }, []);
   return (
     <div>
@@ -71,7 +77,11 @@ export default function Home() {
           {
             messages.map((message, index) => {
               return <div key={index} ref={messageDiv} className={message.machine ? "server bg-purple-950 shadow-2xl text-white" : "client  bg-purple-500 shadow-2xl text-white"}>
-                {message.content}
+                {
+                  (message.machine&&typing)?toast.loading():
+                message.content
+                
+                }
               </div>
             })
           }
