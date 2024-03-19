@@ -1,0 +1,25 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.server{
+    align-self: start;
+    width: 250px;
+    justify-content: start;
+    margin-top: 5px;
+    margin-left: 0;
+    border:2px solid white;
+    border-radius:4px;
+    padding: 7px;
+}
+.client{
+    margin-top: 5px;
+    align-self: end;
+    justify-content: end;
+    width: 250px;
+    border: 2px solid white;
+    border-radius:4px;
+    padding: 7px;
+    /* margin-left: 0; */
+}
