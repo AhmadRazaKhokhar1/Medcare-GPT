@@ -3,6 +3,14 @@
     padding: 0;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
+.containerMain::-webkit-scrollbar{
+    width: 5px;
+    background-color: rgba(162, 0, 255, 0.281);
+}
+.containerMain::-webkit-scrollbar-thumb{
+    border-radius:12px;
+    background-color: rgb(193, 1, 252);
+}
 .server{
     align-self: self-end;
     width: 250px;
