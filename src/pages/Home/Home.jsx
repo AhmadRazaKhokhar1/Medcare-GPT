@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import Loader from '../../components/Loader';
 export default function Home() {
   //variables
   const [messages, setMessages] = useState([]);
@@ -10,6 +11,7 @@ export default function Home() {
   
   //references
   const messageDiv = useRef();
+  const containerMain = useRef();
 
   //fetch all messages
   const fetchMessages = useCallback(async () => {
@@ -24,7 +26,6 @@ export default function Home() {
       setRecentConversationId(response.data.data);
       const lastConversationId = messages.map((msg)=>{return (msg?msg.conversation_id:"")});
       let index = lastConversationId.length - 1;
-      console.log(lastConversationId[index]);
       return;
     } catch (error) {
       console.log(error);
@@ -39,7 +40,7 @@ export default function Home() {
     try {
       setTyping(true)
       setQuery('');
-      const response = await axios.post('https://getcody.ai/api/v1/messages', { 'content': query, 'conversation_id': 'WjnegEGA3bwZ' }, {
+       await axios.post('https://getcody.ai/api/v1/messages', { 'content': query, 'conversation_id': 'WjnegEGA3bwZ' }, {
         headers: {
           'Authorization': 'Bearer 895DxNd88qTCyBAh1X65pYI2s41lZZc9ZY7JCM1L13a16323',
           'Content-Type': 'application/json'
@@ -53,13 +54,13 @@ export default function Home() {
       console.log(error);
     }
   }
-
+const scrollToBottom = () => {
+  containerMain.current?.scrollIntoView({ behavior: "smooth" })
+}
   useEffect(() => {
     fetchMessages();
     //scrolling to bottom after every render
-if(messageDiv.current){
-  messageDiv.current.scrollTop = messageDiv.current.scrollHeight;
-}
+scrollToBottom();
   }, []);
   return (
     <div>
@@ -71,20 +72,21 @@ if(messageDiv.current){
       </p>
       <br />
       {/* Messages container  */}
-      <div className="containerMain border-purple-900 border-solid border-[5px] rounded-lg w-[50vw] max-h-[80vh] h-[80vh] p-6 mx-auto bg-purple-300 flex flex-col justify-between overflow-hidden overflow-y-auto mb-32">
+      <div ref={containerMain} className="containerMain border-purple-900 border-solid border-[5px] rounded-lg w-[50vw] max-h-[80vh] h-[80vh] p-6 mx-auto bg-purple-300 flex flex-col justify-between overflow-hidden overflow-y-auto mb-32">
         <div className='justify-self-start flex flex-col-reverse '>
 
-          {
-            messages.map((message, index) => {
+          
+           
+              {
+              !typing?messages.map((message, index) => {
               return <div key={index} ref={messageDiv} className={message.machine ? "server bg-purple-950 shadow-2xl text-white" : "client  bg-purple-500 shadow-2xl text-white"}>
                 {
-                  (message.machine&&typing)?toast.loading():
-                message.content
-                
+                  
+                  message.content
+                  
                 }
               </div>
-            })
-          }
+            }) :<Loader/> }
         </div>
         {/* Message Input */}
         <div className="w-[50.5vw] p-2 border-purple-900 justify-self-end absolute mt-[34.5vw] -ml-8 block bg-purple-400 rounded-lg">
